@@ -9,4 +9,4 @@ Arquitetura do Projeto Obras de Arte com destaque para a API_B2, que oferta o se
 ## Estrutura do Código e Chamadas
 Estrutura dos códigos de cada API e chamadas entre estes.
 
-![COMP_B2](https://github.com/Moriblo/smuseum/blob/main/COMP_B1.png)
+![COMP_B2](https://github.com/Moriblo/smuseum/blob/main/COMP_B2.png)
