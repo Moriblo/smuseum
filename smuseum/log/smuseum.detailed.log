@@ -1,0 +1,8 @@
+[2023-09-05 23:22:59,652] INFO _log() L224  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5002 - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
+[2023-09-05 23:22:59,659] INFO _log() L224  [33mPress CTRL+C to quit[0m - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
+[2023-09-05 23:22:59,674] INFO _log() L224   * Restarting with stat - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
+[2023-09-05 23:23:07,582] WARNING _log() L224   * Debugger is active! - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
+[2023-09-05 23:23:07,612] INFO _log() L224   * Debugger PIN: 118-637-333 - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
+[2023-09-05 23:26:47,748] DEBUG link() L155  {"link":"https:\/\/images.metmuseum.org\/CRDImages\/dp\/original\/DP885496.jpg","obra":"Mona Lisa","artista":"Leonardo da Vinci","total_obras":138,"qtde_msmnome":1,"museu":"MET"} - call_trace=c:\env\smuseum\smuseum.py L155 
+[2023-09-05 23:26:47,802] INFO _log() L224  127.0.0.1 - - [05/Sep/2023 23:26:47] "GET /smuseum?obra=Mona%20Lisa&artista=Leonardo%20da%20Vinci HTTP/1.1" 200 - - call_trace=C:\Users\moacy\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\_internal.py L224 
