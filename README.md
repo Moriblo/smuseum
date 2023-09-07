@@ -13,4 +13,4 @@ Estrutura dos códigos de cada API e chamadas entre estes.
 ![COMP_B2](https://github.com/Moriblo/smuseum/blob/main/COMP_B2.png)
 
 ## Projeto
-Detalhamento dos requisitos (REQ) do MVP e demais issues tratados [https://github.com/users/Moriblo/projects/2]
+Detalhamento dos requisitos (REQ) do MVP e demais issues tratados [https://github.com/users/Moriblo/projects/2/views/1]
