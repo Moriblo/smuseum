@@ -25,34 +25,61 @@ logger = setup_logger(service_name)
 """ Informações de identificação, acesso e documentação do serviço
 """
 # ==============================================================================
-info = Info(title="Busca link de foto de obra em um dado museu", version="1.0.0")
+info = Info(title="API Search in Museum", version="1.0.0")
 app = OpenAPI(__name__, info=info)
+
+home_tag = Tag(name="Documentação", description="Apresentação da documentação via Swagger.")
+obra_tag = Tag(name="Rota em smuseum", description="Realiza busca de link de imagem de obra de arte")
 
 # ==============================================================================
 """ Configurações de "Cross-Origin Resource Sharing"
-"""
-# ==============================================================================
-# Foi colocado "supports_credentials=False" para evitar possíveis conflitos com
-# algum tipo de configuração de browser. Mas não é a melhor recomendação por 
-# segurança. Para melhorar a segurança desta API, o mais indicado segue nas 
-# linhas abaixo comentadas.
-CORS(app, supports_credentials=False)
 
-# origins_permitidas = ["Obras de Arte"]
+Foi colocado "supports_credentials=False" para evitar possíveis conflitos com
+algum tipo de configuração de browser. Mas não é a melhor recomendação por 
+segurança. Para melhorar a segurança desta API, o mais indicado segue nas 
+linhas abaixo:
+
+#> origins_permitidas = ["Obras de Arte"]
 # Configurando o CORS com suporte a credenciais
-# CORS(app, origins=origins_permitidas, supports_credentials=True)
-# CORS(app, supports_credentials=True, expose_headers=["Authorization"])
+#> CORS(app, origins=origins_permitidas, supports_credentials=True)
+#> CORS(app, supports_credentials=True, expose_headers=["Authorization"])
 # Adicionalmente utilizar da biblioteca PyJWT
 
-# ==============================================================================
-""" Rota /tradutor para tratar o fetch de `GET` do script.js.
 """
 # ==============================================================================
-@app.route('/smuseum', methods=['GET'])
-def link():
-    
+
+CORS(app, supports_credentials=False)
+
+# ========================================================================================
+""" Rota /openapi para geração da documentação via Swagger
+"""
+# ========================================================================================
+@app.get('/', tags=[home_tag])
+def home():
+    """Redireciona para /openapi/swagger.
+    """
+    return redirect('/openapi/swagger')
+
+# ==============================================================================
+""" Rota /smuseum
+
+No futuro os "request.args.get" podem ser acrescidos de algumas das variáveis
+inicializadas na parte "Inicialização de Variáveis" neste código.
+
+"""
+# ==============================================================================
+@app.get('/smuseum', methods=['GET'], tags=[obra_tag],
+            responses={"200": SmuseumSchema, "500": ErrorSchema})
+
+def link(query: SmuseumBuscaSchema):
+    """Busca link de imagem de obra de arte a partir do nome do Artista e Obra.
+    """
+    # Incializa variáveis gerais
+    contador_obras = 0
+    error_code = "200"
+
     # Lê o valor do parâmetro de consulta 'entrada' da solicitação
-    busca_obra = request.args.get('obra')
+    busca_obra = request.args.get('nome')
     busca_artista = request.args.get('artista')
 
     # ==============================================================================
@@ -77,7 +104,7 @@ def link():
     """
     # ==============================================================================
 
-    ### Inicia as variáveis para o MET
+    # Inicia as variáveis para o MET
     museu = "MET"
     museum_url_search = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&artistOrCulture=true&q="
     museum_url_object = "https://collectionapi.metmuseum.org/public/collection/v1/objects/"
@@ -87,18 +114,27 @@ def link():
     campo_ID = "objectIDs"
     campo_result = "primaryImage"
 
-    # URL para a pesquisa
+    # URL para a pesquisa do artista e coleta dos códigos das obras relacionadas
     search_url = f'{museum_url_search}{busca_artista}'
-    
-    # Realiza a pesquisa e retorna os IDs e total de objetos
-    response = requests.get(search_url)
+
+    # Realiza a pesquisa e retorna os IDs e total de objetos, caso haja artista
+    try:
+        response = requests.get(search_url)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        if (err):
+            error_msg = err
+            error_code = "500"
+            print(f'Erro HTTP: {err}')
+            return {"mesage": error_msg}, error_code
+
     total_objetos = response.json()[campo_total]
     object_ids = response.json()[campo_ID]
-
-    # Verifica se foi encontrado o artista na base do museu
+    
+    # Verifica se foram encontradas obras para o artista na base do museu
     if (total_objetos != 0):
 
-        # Obtém informações sobre cada objeto em JSON
+        # Obtém informações sobre cada objeto (obra)
         artworks = []
         for object_id in object_ids:
             object_url = f"{museum_url_object}{object_id}"
@@ -110,30 +146,31 @@ def link():
         with open("artworks.json", "w") as f:
             json.dump(artworks, f)
 
-        ## Abre o arquivo para posicionar a leitura no início do arquivo e 
-        # converte o em uma lista.
+        # Abre o arquivo para posicionar a leitura no início do arquivo e 
+        # converte-lo em uma lista.
         with open("artworks.json", "r") as f:
             data = json.load(f)
 
-        ## Inicializa um contador de vezes em que uma dada obra aparece para 
+        # Inicializa um contador de vezes em que uma dada obra aparece para 
         # um dado artista. Inicializa um vetor índices que vai coletar os números 
         # dos índices dos registros encontrados na lista 'data'.
-        contador_obras = 0
         indices = []
 
-        ## Percorre a lista 'data'
+        # Percorre a lista 'data'
         for i, DB in enumerate(data):
+
             # Verifica se o conteúdo da variável 'campo_obra' é um campo dentro 
             # do dicionário.
             if (campo_obra in DB):
 
                 # Verifica se, dado um título de uma obra ('busca_obra'), este 
                 # título consta, total ou parcialmente (str(DB[campo_obra]), na 
-                # lista 'DB' para o campo 'campo_obra'.
-                
-                #if (busca_obra in str(DB[campo_obra])):
-                if busca_obra.lower() in str(DB[campo_obra]).lower():
+                # lista 'DB' para o campo 'campo_obra', considerando ambos em
+                # low case (No Caps)
+                if busca_obra and DB[campo_obra] and busca_obra.lower() in \
+                    str(DB[campo_obra]).lower():
 
+                # if busca_obra.lower() in str(DB[campo_obra]).lower():
 
                     # Incrementa o contador e coleta o número do índice do 
                     # registro na lista.
@@ -151,24 +188,23 @@ def link():
             # artista
             busca_link = f'Erro_[1]: Existem {total_objetos} obras deste artista no museu {museu}. Porém nenhuma como {busca_obra}'
             logger.warning(f"Erro_[1]: Existem {total_objetos} obras deste artista no museu {museu}. Porém nenhuma como {busca_obra}")
-        
-        json_response = ujson.dumps({
-            "link": busca_link,
-            "obra": busca_obra,
-            "artista": busca_artista, 
-            "total_obras":  total_objetos, 
-            "qtde_msmnome": contador_obras, 
-            "museu": museu
-        })
-        
-        print(f"Resposta: {json_response}")
-        logger.debug(f"{json_response}")
-        return Response(json_response, content_type='application/json')
     else:
         #Trata erro quando não encontra nenhuma obra para o artista.
         busca_link = f'Erro_[2]: Não há obras para este artista no museu {museu}'
         logger.warning(f"Erro_[2]: Não foram econtradas obras do artista {busca_artista} no museu {museu}")
-    pass
+        error_code = "404"
+
+    json_response = ujson.dumps({
+        "link": busca_link,
+        "obra": busca_obra,
+        "artista": busca_artista,
+        "total_obras":  total_objetos,
+        "qtde_msmnome": contador_obras,
+        "museu": museu
+    })
+
+    return Response(json_response, content_type='application/json'), error_code
+
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
