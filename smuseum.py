@@ -130,7 +130,10 @@ def link():
                 # Verifica se, dado um título de uma obra ('busca_obra'), este 
                 # título consta, total ou parcialmente (str(DB[campo_obra]), na 
                 # lista 'DB' para o campo 'campo_obra'.
-                if (busca_obra in str(DB[campo_obra])):
+                
+                #if (busca_obra in str(DB[campo_obra])):
+                if busca_obra.lower() in str(DB[campo_obra]).lower():
+
 
                     # Incrementa o contador e coleta o número do índice do 
                     # registro na lista.
@@ -142,11 +145,12 @@ def link():
             # Havendo obra(s) para o artista informado, coleta a informação do 
             # link de imagem para a primeira ocorrência
             busca_link = data[indices[0]][campo_result]
+            logger.warning(f"Msg[1] Dados para registro: Lnk: {busca_link}, Obr: {busca_obra}, Art: {busca_artista}")
         else:
-            # Registra no log o erro por não ter encontrado nenhuma obra para o 
+            # Registra no log o erro por não ter encontrado a obra para o 
             # artista
-            busca_link = f'Erro: Não há essa obra no museu {museu}'
-            logger.warning(f"Erro: Não foi possível encontrar a obra {busca_obra} para o artista {busca_artista} no museu {museu}")
+            busca_link = f'Erro_[1]: Existem {total_objetos} obras deste artista no museu {museu}. Porém nenhuma como {busca_obra}'
+            logger.warning(f"Erro_[1]: Existem {total_objetos} obras deste artista no museu {museu}. Porém nenhuma como {busca_obra}")
         
         json_response = ujson.dumps({
             "link": busca_link,
@@ -156,13 +160,14 @@ def link():
             "qtde_msmnome": contador_obras, 
             "museu": museu
         })
+        
         print(f"Resposta: {json_response}")
         logger.debug(f"{json_response}")
         return Response(json_response, content_type='application/json')
     else:
-        #Trata erro quando não encontra artista.
-        busca_link = busca_link = f'Erro: Não há esse artista no museu {museu}'
-        logger.warning(f"Erro: Não foram econtradas obras do artista {busca_artista} no museu {museu}")
+        #Trata erro quando não encontra nenhuma obra para o artista.
+        busca_link = f'Erro_[2]: Não há obras para este artista no museu {museu}'
+        logger.warning(f"Erro_[2]: Não foram econtradas obras do artista {busca_artista} no museu {museu}")
     pass
 
 if __name__ == '__main__':
