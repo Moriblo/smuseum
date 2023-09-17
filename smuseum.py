@@ -190,8 +190,8 @@ def link(query: SmuseumBuscaSchema):
             logger.warning(f"Erro_[1]: Existem {total_objetos} obras deste artista no museu {museu}. Porém nenhuma como {busca_obra}")
     else:
         #Trata erro quando não encontra nenhuma obra para o artista.
-        busca_link = f'Erro_[2]: Não há obras para este artista no museu {museu}'
-        logger.warning(f"Erro_[2]: Não foram econtradas obras do artista {busca_artista} no museu {museu}")
+        busca_link = f'Erro_[2]: Não há obras do artista {busca_artista} no museu {museu}")'
+        logger.warning(f"Erro_[2]: Não há obras do artista {busca_artista} no museu {museu}")
         error_code = "404"
 
     json_response = ujson.dumps({
