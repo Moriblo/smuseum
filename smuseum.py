@@ -162,13 +162,19 @@ def link(query: SmuseumBuscaSchema):
             artwork = response.json()
             artworks.append(artwork)
 
+        # Define o caminho do diretório smuseum
+        smuseum_dir = '/env/smuseum/'
+
+        # Cria o caminho para o arquivo artworks
+        artworks_path = os.path.join(smuseum_dir, 'artworks.json')
+
         # Armazena os resultados em uma "base de dados" JSON
-        with open("artworks.json", "w") as f:
+        with open(artworks_path, "w") as f:
             json.dump(artworks, f)
 
         # Abre o arquivo para posicionar a leitura no início do arquivo e 
         # converte-lo em uma lista.
-        with open("artworks.json", "r") as f:
+        with open(artworks_path, "r") as f:
             data = json.load(f)
 
         # Inicializa um contador de vezes em que uma dada obra aparece para 
