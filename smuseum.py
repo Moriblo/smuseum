@@ -86,8 +86,15 @@ def link(query: SmuseumBuscaSchema):
         consulta.
     """
     # ==============================================================================
+    # Lê parâmetros de busca
     busca_obra = request.args.get('nome')
     busca_artista = request.args.get('artista')
+
+    # Lê identificação da origem da solicitação de uso desta API
+    origin = request.headers.get('X-Origin')
+
+    print(f"Recebido Obra: {busca_obra} e Artista: {busca_artista}")
+    print(f"Origem: {origin}")
 
     # ==============================================================================
     """ 6.1.2 - Inicialização de Variáveis.
