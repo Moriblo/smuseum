@@ -12,7 +12,7 @@ Estrutura do código da API e chamadas.
 ### Projeto
 Detalhamento dos requisitos (REQ) do MVP e demais issues tratados:
 
-[https://github.com/users/Moriblo/projects/2/views/1]
+### [Link para os Issues do Projeto](https://github.com/users/Moriblo/projects/2/views/1)
 
 * REQ_A :: Requisitos do Front
 * REQ_B1 :: Requisitos da API Tradutor (tradutor.py)
