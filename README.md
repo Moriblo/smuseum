@@ -1,4 +1,4 @@
-# [Projeto Obras de Arte](https://github.com/Moriblo/)
+# [Projeto Obras de Arte](https://github.com/Moriblo)
 
 ## API_B2 Search in Museum [smuseum.py]
  API_B2 do MVP da Sprint 3 do curso de pós gradução em Engenharia de Software da PUC.
