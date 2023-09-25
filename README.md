@@ -1,4 +1,4 @@
-# API_B2 Search in Museum [smuseum.py] <a href="https://github.com/Moriblo"><img src="(https://github.com/Moriblo/tradutor/blob/main/Tradutor.jpg)" width="80" height="100"></a>
+# API_B2 Search in Museum [smuseum.py] <a href="https://github.com/Moriblo"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f519.png" width="20" height="20"></a>
 
  API_B2 do MVP da Sprint 3 do curso de pós gradução em Engenharia de Software da PUC.
  Trata-se de uma API para realização de busca de links de imagem para uma dada Obra e Artista.
